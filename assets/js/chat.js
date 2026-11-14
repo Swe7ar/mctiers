@@ -370,11 +370,57 @@
   async function refresh() {
     const res = await api("/state");
     if (res && res.ok) {
+      setHubAvailable(true);
       state = { codes: res.codes || {}, rooms: res.rooms || {}, tiers: res.tiers || {}, profiles: res.profiles || {} };
       /* keep the open thread in sync with the hub */
       if (current && state.rooms[current.id]) current = state.rooms[current.id];
+    } else {
+      setHubAvailable(false);
     }
     render();
+  }
+
+  /** GitHub Pages / static hosts have no /api/tiertest/*. Show a clear
+      message instead of an empty broken queue and stop polling. */
+  let hubAvailable = true;
+  function setHubAvailable(ok) {
+    if (hubAvailable === ok) return;
+    hubAvailable = ok;
+    const banner = document.getElementById("staticBanner");
+    if (ok) {
+      if (banner) banner.remove();
+      return;
+    }
+    /* stop the poll — a static host will never serve the hub */
+    if (pollTimer) {
+      clearInterval(pollTimer);
+      pollTimer = null;
+    }
+    const wrap = document.querySelector(".chat-layout");
+    if (wrap) {
+      const div = document.createElement("div");
+      div.id = "staticBanner";
+      div.innerHTML = `<div class="panel" style="border-color:#3b4d63;margin-bottom:12px;padding:18px 20px">
+        <div style="font-weight:800;letter-spacing:.02em;color:#f6e2a8;margin-bottom:6px">static deployment — الموقع بدون سيرفر حالياً</div>
+        <div style="font-size:13.5px;color:#cbd5e1;line-height:1.6">هذا الموقع منشور بشكل static على GitHub Pages، فما فيه <code>/api/tiertest/*</code>. الترتيب، التايرات، البروفايلات وسير العمل الأساسية كلها تعمل كالمعتاد.</div>
+        <div style="font-size:13px;color:#9fb0c3;margin-top:8px;line-height:1.7">لتشغيل <b>الدردشة والكود</b> من قلب اللعبة تحتاج سيرفر Node يشغل <code>tools/serve.mjs</code>. أسهل خيار مجاني: <b>Render</b> (5 دقائق فقط) — وضبت `&lt;root&gt;/README.md` تحت قسم "Host this repo for free on Render" وبنينا الجاهز عليه.</div>
+      </div>`;
+      wrap.parentNode.insertBefore(div, wrap);
+    }
+    const btn = document.getElementById("newChatBtn");
+    if (btn) btn.setAttribute("disabled", "");
+    const testerPanel = document.getElementById("testerPanel");
+    if (testerPanel) testerPanel.hidden = true;
+    const composer = document.getElementById("chatComposer");
+    if (composer) composer.hidden = true;
+    const thread = document.getElementById("chatThread");
+    if (thread) {
+      thread.innerHTML = `<div class="chat-empty">
+        <div class="chat-empty-icon">💬</div>
+        <h3>static deployment — البهائد مشتغل</h3>
+        <p class="muted">هذا الموقع static، فالكود والطابور والدعم ما يشتغلون هنا. اللي يشتغل طبيعي: الترتيب، التايرات، البروفايلات، ورفع أي صورة. البرومبت الكامل نزّله حتى تنزل بعده سيرفر Node على أي منصة مجانية.</p>
+      </div>`;
+    }
   }
 
   function wire() {
@@ -431,10 +477,12 @@
       code = null;
     }
 
-    refresh();
-    if (code) openTierFlow(code);
+    /* First refresh decides whether the hub exists (GitHub Pages = no /api). */
+    refresh().then(() => {
+      if (code && hubAvailable) openTierFlow(code);
+    });
     pollTimer = setInterval(refresh, 3000);
-    window.addEventListener("beforeunload", () => clearInterval(pollTimer));
+    window.addEventListener("beforeunload", () => pollTimer && clearInterval(pollTimer));
     /* Keep the chat page in sync with the roster the hub knows about. */
     if (window.MCTApp && typeof MCTApp.syncHub === "function") MCTApp.syncHub();
   }

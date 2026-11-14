@@ -12,9 +12,8 @@ hub:
   # How often the plugin checks the hub for new requests (in ticks, 20 = 1s).
   poll-interval-ticks: 40
   # Public website URL - clicking the code in chat opens this with the code ready to paste.
-  # Host the site on the game server and point this at it (http://<ip>:8080 now,
-  # or https://crakedmctiers.gg/chat.html once the domain is bought and pointed).
-  website: "http://130.78.218.210:8080/chat.html"
+  # Static page on GitHub Pages (swe7ar.github.io); chat/queue is not available there.
+  website: "https://swe7ar.github.io/mctiers/chat.html"
 
 server:
   # Name shown in the server list and used as the MOTD.
