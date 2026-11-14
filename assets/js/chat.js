@@ -400,11 +400,12 @@
     if (wrap) {
       const div = document.createElement("div");
       div.id = "staticBanner";
-      div.innerHTML = `<div class="panel" style="border-color:#3b4d63;margin-bottom:12px;padding:18px 20px">
-        <div style="font-weight:800;letter-spacing:.02em;color:#f6e2a8;margin-bottom:6px">static deployment — الموقع بدون سيرفر حالياً</div>
-        <div style="font-size:13.5px;color:#cbd5e1;line-height:1.6">هذا الموقع منشور بشكل static على GitHub Pages، فما فيه <code>/api/tiertest/*</code>. الترتيب، التايرات، البروفايلات وسير العمل الأساسية كلها تعمل كالمعتاد.</div>
-        <div style="font-size:13px;color:#9fb0c3;margin-top:8px;line-height:1.7">لتشغيل <b>الدردشة والكود</b> من قلب اللعبة تحتاج سيرفر Node يشغل <code>tools/serve.mjs</code>. أسهل خيار مجاني: <b>Render</b> (5 دقائق فقط) — وضبت `&lt;root&gt;/README.md` تحت قسم "Host this repo for free on Render" وبنينا الجاهز عليه.</div>
-      </div>`;
+      div.innerHTML =
+        '<div class="panel" style="border-color:#3b4d63;margin-bottom:12px;padding:18px 20px">' +
+        '<div style="font-weight:800;letter-spacing:.02em;color:#f6e2a8;margin-bottom:6px">static deployment</div>' +
+        '<div style="font-size:13.5px;color:#cbd5e1;line-height:1.6">الموقع حالياً static على GitHub Pages، فما فيه API endpoints. الترتيب، التايرات، البروفايلات وكل الصفحات تعمل كالمعتاد.</div>' +
+        '<div style="font-size:13px;color:#9fb0c3;margin-top:8px;line-height:1.7">لتشغيل <b>الدردشة والكود والطابور</b> من داخل اللعبة تحتاج سيرفر Node يشغل <code>tools/serve.mjs</code>. أسهل خيار مجاني: <b>Render</b> — اقرأ تعليمات الملف README.md تحت عنوان "Host this repo for free on Render".</div>' +
+        '</div>';
       wrap.parentNode.insertBefore(div, wrap);
     }
     const btn = document.getElementById("newChatBtn");
