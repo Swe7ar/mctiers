@@ -1,0 +1,9 @@
+{
+  "name": "mctiers",
+  "version": "1.2.2",
+  "private": true,
+  "description": "MCTiers - Minecraft PvP tier list (static site + tier hub)",
+  "scripts": {
+    "start": "node tools/serve.mjs"
+  }
+}

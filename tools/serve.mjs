@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 import { createHub } from "./hub.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const port = Number(process.argv[2] || 4173);
+const port = Number(process.env.PORT || process.argv[2] || 4173);
 const hub = createHub(root);
 
 const types = {
