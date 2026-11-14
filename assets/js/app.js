@@ -789,6 +789,13 @@
   /** Push every local tier and profile to the shared hub in one request. */
   async function pushAllToHub() {
     if (typeof fetch !== "function") return 0;
+    /* On static hosts there is no hub — skip quietly instead of 405s. */
+    try {
+      const probe = await fetch("/api/tiertest/state", { method: "GET" });
+      if (!probe.ok) return 0;
+    } catch (e) {
+      return 0;
+    }
     const accounts = Store.accounts();
     const tierPayload = {};
     const profilePayload = {};

@@ -481,11 +481,11 @@
     /* First refresh decides whether the hub exists (GitHub Pages = no /api). */
     refresh().then(() => {
       if (code && hubAvailable) openTierFlow(code);
+      /* Only sync with the hub when the hub exists (not on GitHub Pages). */
+      if (hubAvailable && window.MCTApp && typeof MCTApp.syncHub === "function") MCTApp.syncHub();
     });
     pollTimer = setInterval(refresh, 3000);
     window.addEventListener("beforeunload", () => pollTimer && clearInterval(pollTimer));
-    /* Keep the chat page in sync with the roster the hub knows about. */
-    if (window.MCTApp && typeof MCTApp.syncHub === "function") MCTApp.syncHub();
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
