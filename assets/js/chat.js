@@ -195,6 +195,45 @@
   }
 
   function render() {
+    if (!hubAvailable) {
+      /* Static hosting: show a clear message instead of a broken shell. */
+      const host = $("#chatList");
+      if (host) host.innerHTML = `<div class="chat-side-empty">static deployment.<br>Chat &amp; tier test are offline here.</div>`;
+      const queueHost = $("#chatQueue");
+      if (queueHost) queueHost.innerHTML = `<div class="chat-side-empty">Not available</div>`;
+      const thread = $("#chatThread");
+      if (thread) {
+        thread.innerHTML = `<div class="chat-empty">
+          <div class="chat-empty-icon">💬</div>
+          <h3>static deployment</h3>
+          <p class="muted">You opened the GitHub Pages version. The game server, <code>/tiertest</code> chat and tier test are <b>offline</b> here.<br>Profiles, rankings and tiers render normally.<br><br>To enable it, a Node server must run <code>tools/serve.mjs</code> — free options in the repo's <code>README.md</code>.</p>
+        </div>`;
+      }
+      const awardBlock = $("#awardBlock");
+      if (awardBlock) awardBlock.hidden = true;
+      const queueWho = $("#queueWho");
+      if (queueWho) queueWho.textContent = "static deployment";
+      const hubState = $("#hubState");
+      if (hubState) hubState.textContent = "static — offline";
+      const testerPanel = $("#testerPanel");
+      if (testerPanel) testerPanel.hidden = true;
+      const composer = $("#chatComposer");
+      if (composer) composer.hidden = true;
+      const newBtn = $("#newChatBtn");
+      if (newBtn) { newBtn.setAttribute("disabled", ""); newBtn.textContent = "static — offline"; }
+      const notice = document.getElementById("staticNotice");
+      if (!notice) {
+        const div = document.createElement("div");
+        div.id = "staticNotice";
+        div.innerHTML = `<div class="panel" style="border-color:#3b4d63;padding:14px 18px;margin-bottom:12px">
+          <div style="font-weight:800;color:#f6e2a8;margin-bottom:4px">static deployment</div>
+          <div style="font-size:13px;color:#cbd5e1">Chat is not loaded here — open the GitHub Pages URL with a live <code>tools/serve.mjs</code> (Render/Railway/Fly) for the tier test. See <code>README.md</code> for the free setup.</div>
+        </div>`;
+        const wrap = document.querySelector(".chat-layout");
+        if (wrap) wrap.parentNode.insertBefore(div, wrap);
+      }
+      return;
+    }
     renderList();
     renderQueue();
     renderThread();
@@ -386,41 +425,9 @@
   function setHubAvailable(ok) {
     if (hubAvailable === ok) return;
     hubAvailable = ok;
-    const banner = document.getElementById("staticBanner");
-    if (ok) {
-      if (banner) banner.remove();
-      return;
-    }
-    /* stop the poll — a static host will never serve the hub */
     if (pollTimer) {
       clearInterval(pollTimer);
       pollTimer = null;
-    }
-    const wrap = document.querySelector(".chat-layout");
-    if (wrap) {
-      const div = document.createElement("div");
-      div.id = "staticBanner";
-      div.innerHTML =
-        '<div class="panel" style="border-color:#3b4d63;margin-bottom:12px;padding:18px 20px">' +
-        '<div style="font-weight:800;letter-spacing:.02em;color:#f6e2a8;margin-bottom:6px">static deployment</div>' +
-        '<div style="font-size:13.5px;color:#cbd5e1;line-height:1.6">الموقع حالياً static على GitHub Pages، فما فيه API endpoints. الترتيب، التايرات، البروفايلات وكل الصفحات تعمل كالمعتاد.</div>' +
-        '<div style="font-size:13px;color:#9fb0c3;margin-top:8px;line-height:1.7">لتشغيل <b>الدردشة والكود والطابور</b> من داخل اللعبة تحتاج سيرفر Node يشغل <code>tools/serve.mjs</code>. أسهل خيار مجاني: <b>Render</b> — اقرأ تعليمات الملف README.md تحت عنوان "Host this repo for free on Render".</div>' +
-        '</div>';
-      wrap.parentNode.insertBefore(div, wrap);
-    }
-    const btn = document.getElementById("newChatBtn");
-    if (btn) btn.setAttribute("disabled", "");
-    const testerPanel = document.getElementById("testerPanel");
-    if (testerPanel) testerPanel.hidden = true;
-    const composer = document.getElementById("chatComposer");
-    if (composer) composer.hidden = true;
-    const thread = document.getElementById("chatThread");
-    if (thread) {
-      thread.innerHTML = `<div class="chat-empty">
-        <div class="chat-empty-icon">💬</div>
-        <h3>static deployment — البهائد مشتغل</h3>
-        <p class="muted">هذا الموقع static، فالكود والطابور والدعم ما يشتغلون هنا. اللي يشتغل طبيعي: الترتيب، التايرات، البروفايلات، ورفع أي صورة. البرومبت الكامل نزّله حتى تنزل بعده سيرفر Node على أي منصة مجانية.</p>
-      </div>`;
     }
   }
 
