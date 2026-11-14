@@ -33,7 +33,7 @@ cd minecraft-plugin
 mvn clean package
 ```
 
-The jar lands in `target/mctiers-tiertest-1.0.0.jar`.
+The jar lands in `target/mctiers-tiertest-1.2.2.jar`.
 
 ## Install
 

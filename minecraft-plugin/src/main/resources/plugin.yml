@@ -1,5 +1,5 @@
 name: MCTiersTierTest
-version: '1.0.0'
+version: '1.2.2'
 main: gg.craked.mctiers.TierTestPlugin
 api-version: '1.21'
 description: Issues tier test codes and syncs them with the MCTiers website chat.

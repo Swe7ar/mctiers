@@ -6,7 +6,7 @@
 
   <groupId>gg.craked</groupId>
   <artifactId>mctiers-tiertest</artifactId>
-  <version>1.0.0</version>
+  <version>1.2.2</version>
   <packaging>jar</packaging>
 
   <name>MCTiersTierTest</name>
