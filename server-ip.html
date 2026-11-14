@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Server IP — MCTiers</title>
+<meta name="description" content="Join 130.78.218.210:25606 on Java or Bedrock and type /tiertest to get ranked.">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="canonical" href="https://crakedmctiers.gg/server-ip.html">
+<meta property="og:url" content="https://crakedmctiers.gg/server-ip.html">
+<meta property="og:site_name" content="MCTiers">
+<script>try{var t=localStorage.getItem('mctiers.theme.v1');if(t&&t!=='glass')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body data-page="static">
+<div id="chrome-top"></div>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Server IP</h1>
+    <div class="sub">Tier tests happen live on the MCTiers server. Java and Bedrock are both supported.</div>
+  </div>
+
+  <div class="panel" style="overflow:hidden">
+    <div class="server-hero">
+      <div class="server-hero-glow"></div>
+      <div class="server-hero-row">
+        <img class="server-icon server-icon-lg" src="assets/img/server.png" alt="CrackedMCTiers server" onerror="this.onerror=null;this.src='assets/img/server.svg'">
+        <div>
+          <div class="tiny" style="letter-spacing:.1em;color:#7d8798;font-weight:700">JAVA &amp; BEDROCK</div>
+          <div class="server-name">CrackedMCTiers</div>
+          <div style="font-family:ui-monospace,monospace;font-size:22px;font-weight:700;letter-spacing:-.01em">130.78.218.210:25606</div>
+          <div class="tiny" style="color:#7ee0a1">● Online · Bedrock port 19132</div>
+        </div>
+        <button class="btn btn-primary" id="copyIp" style="margin-left:auto">Copy IP</button>
+      </div>
+    </div>
+    <div class="panel-foot">
+      <span class="tiny muted">Versions: Java 1.21 – 1.21.8 · Bedrock 1.21+</span>
+      <a class="btn btn-ghost btn-sm" style="margin-left:auto" href="chat.html">Open the test chat →</a>
+    </div>
+  </div>
+
+  <section class="section">
+    <h2 class="section-title">How to get tier tested</h2>
+    <div class="panel">
+      <div class="steps">
+        <div class="step"><span class="step-num">1</span><div><h4>Join the server</h4><p>Add <b>130.78.218.210:25606</b> in your server list and connect.</p></div></div>
+        <div class="step"><span class="step-num">2</span><div><h4>Run /tiertest</h4><p>Pick the gamemode and your region to enter that queue.</p></div></div>
+        <div class="step"><span class="step-num">3</span><div><h4>Fight a tester</h4><p>You are moved to a private arena with the official kit for that gamemode.</p></div></div>
+      </div>
+      <div class="callout">
+        <span>✦</span>
+        <span>Your tier appears on your profile right after the test. Queues move fastest during <a href="events.html" style="color:#f6e2a8;text-decoration:underline">Open Testing Weekend</a>.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Pick a gamemode to be tested in</h2>
+    <div class="gm-grid" id="gm-links"></div>
+  </section>
+
+  <section class="section">
+    <div class="panel panel-pad" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+      <div style="flex:1;min-width:240px">
+        <div class="tiny muted">LOCAL ROSTER</div>
+        <div style="font-weight:700;font-size:15px;margin-top:2px">No server? Use the local roster.</div>
+        <div class="small muted">Create an account in this browser and the admin sets your tiers — the leaderboard updates instantly.</div>
+      </div>
+      <a class="btn btn-gold" href="account.html">Create an account</a>
+    </div>
+  </section>
+</main>
+
+<div id="chrome-footer"></div>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/fx.js"></script>
+<script>
+  document.getElementById("copyIp").addEventListener("click", async function () {
+    try {
+      await navigator.clipboard.writeText("130.78.218.210:25606");
+      MCTApp.toast("IP copied — 130.78.218.210:25606");
+    } catch (e) {
+      MCTApp.toast("130.78.218.210:25606");
+    }
+  });
+</script>
+</body>
+</html>

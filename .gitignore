@@ -1,0 +1,20 @@
+# Runtime state
+data/
+mcdata/
+
+# Java build
+mc-build/
+qa/
+minecraft-plugin/target/
+mctiers-tiertest-*.jar
+
+# Windows temp
+*.zip
+*.log
+*.tar.gz
+
+# Separate project, not part of this site
+namemc/
+
+# Node
+node_modules/

@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="Cat wearing a diamond helmet sitting on a grass block — HC TIER">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2c3a26"/>
+      <stop offset="0.55" stop-color="#1b2519"/>
+      <stop offset="1" stop-color="#0c110b"/>
+    </linearGradient>
+    <linearGradient id="fur" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f0a84a"/>
+      <stop offset="0.55" stop-color="#d9863a"/>
+      <stop offset="1" stop-color="#b96a2c"/>
+    </linearGradient>
+    <linearGradient id="headFur" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#f6b45c"/>
+      <stop offset="1" stop-color="#cf7a33"/>
+    </linearGradient>
+    <linearGradient id="diamond" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b8f6ef"/>
+      <stop offset="0.45" stop-color="#6fe3d8"/>
+      <stop offset="1" stop-color="#39b7ae"/>
+    </linearGradient>
+    <linearGradient id="grassTop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#86c04a"/>
+      <stop offset="1" stop-color="#5f9a34"/>
+    </linearGradient>
+    <linearGradient id="dirtL" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7a5334"/>
+      <stop offset="1" stop-color="#5b3b23"/>
+    </linearGradient>
+    <linearGradient id="dirtR" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#63432a"/>
+      <stop offset="1" stop-color="#452c19"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.28" r="0.7">
+      <stop offset="0" stop-color="#f7c976" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#f7c976" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#050806" stop-opacity="0"/>
+      <stop offset="0.45" stop-color="#050806" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#050806" stop-opacity="0.85"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="256" height="256" fill="url(#sky)"/>
+
+  <!-- forest backdrop -->
+  <g opacity="0.5">
+    <ellipse cx="26" cy="34" rx="46" ry="34" fill="#2f4a22"/>
+    <ellipse cx="228" cy="26" rx="52" ry="36" fill="#2a4420"/>
+    <ellipse cx="244" cy="120" rx="40" ry="60" fill="#233a1c"/>
+    <ellipse cx="10" cy="132" rx="34" ry="72" fill="#20351a"/>
+    <path d="M196 0h60v140c-30-6-46-34-52-70z" fill="#1a2c15" opacity=".7"/>
+  </g>
+  <g fill="#121c10" opacity="0.85">
+    <rect x="204" y="10" width="14" height="120" rx="3"/>
+    <rect x="14" y="40" width="12" height="100" rx="3"/>
+  </g>
+  <rect width="256" height="256" fill="url(#glow)"/>
+
+  <!-- grass block -->
+  <g>
+    <polygon points="74,150 128,122 210,150 156,178" fill="url(#grassTop)"/>
+    <polygon points="74,150 156,178 156,238 74,210" fill="url(#dirtL)"/>
+    <polygon points="156,178 210,150 210,210 156,238" fill="url(#dirtR)"/>
+    <polygon points="74,150 156,178 156,186 74,158" fill="#5d9432"/>
+    <polygon points="156,178 210,150 210,158 156,186" fill="#4d7d29"/>
+    <!-- pixel speckles -->
+    <g fill="#3f2a17" opacity=".55">
+      <rect x="86" y="176" width="8" height="8"/><rect x="116" y="196" width="8" height="8"/>
+      <rect x="100" y="214" width="8" height="8"/><rect x="134" y="184" width="6" height="6"/>
+      <rect x="82" y="200" width="6" height="6"/>
+    </g>
+    <g fill="#8a5f3c" opacity=".45">
+      <rect x="168" y="170" width="8" height="8"/><rect x="188" y="188" width="8" height="8"/>
+      <rect x="170" y="210" width="6" height="6"/><rect x="146" y="204" width="6" height="6"/>
+    </g>
+    <g fill="#6fa93c" opacity=".6">
+      <rect x="92" y="146" width="10" height="6"/><rect x="150" y="140" width="12" height="6"/>
+      <rect x="176" y="152" width="8" height="6"/>
+    </g>
+  </g>
+
+  <!-- cat -->
+  <g>
+    <!-- body -->
+    <ellipse cx="142" cy="118" rx="42" ry="36" fill="url(#fur)"/>
+    <ellipse cx="142" cy="128" rx="30" ry="24" fill="#f2c48c" opacity=".55"/>
+    <ellipse cx="108" cy="146" rx="13" ry="10" fill="#eda457"/>
+    <ellipse cx="176" cy="146" rx="13" ry="10" fill="#eda457"/>
+    <!-- tail -->
+    <path d="M182 146c14 4 18-8 12-16" stroke="#d9863a" stroke-width="10" fill="none" stroke-linecap="round"/>
+
+    <!-- ears -->
+    <path d="M116 62l-12-24 26 10z" fill="#d9863a"/>
+    <path d="M118 60l-7-15 15 6z" fill="#f4b3a4"/>
+    <path d="M168 62l12-24-26 10z" fill="#d9863a"/>
+    <path d="M166 60l7-15-15 6z" fill="#f4b3a4"/>
+
+    <!-- head -->
+    <ellipse cx="142" cy="86" rx="34" ry="30" fill="url(#headFur)"/>
+    <!-- cheek fluff -->
+    <path d="M108 92c-8-2-10 8-2 10 4 1 8-2 8-6z" fill="#f6c07a"/>
+    <path d="M176 92c8-2 10 8 2 10-4 1-8-2-8-6z" fill="#f6c07a"/>
+
+    <!-- eyes -->
+    <ellipse cx="130" cy="88" rx="5.5" ry="6.5" fill="#20160c"/>
+    <ellipse cx="154" cy="88" rx="5.5" ry="6.5" fill="#20160c"/>
+    <circle cx="131.6" cy="85.6" r="1.8" fill="#fff" opacity=".9"/>
+    <circle cx="155.6" cy="85.6" r="1.8" fill="#fff" opacity=".9"/>
+
+    <!-- nose + mouth -->
+    <path d="M142 96l-4 4h8z" fill="#e58c8c"/>
+    <path d="M142 100v4M142 104c-2 3-6 3-8 1M142 104c2 3 6 3 8 1" stroke="#8a5a30" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+
+    <!-- whiskers -->
+    <g stroke="#f7e3c6" stroke-width="1.4" opacity=".75" stroke-linecap="round">
+      <path d="M124 98l-16-3M124 102l-16 3"/><path d="M160 98l16-3M160 102l16 3"/>
+    </g>
+
+    <!-- diamond helmet -->
+    <g>
+      <rect x="104" y="52" width="76" height="24" rx="10" fill="url(#diamond)"/>
+      <rect x="100" y="64" width="12" height="20" rx="5" fill="#5ed3c8"/>
+      <rect x="172" y="64" width="12" height="20" rx="5" fill="#4cc2b8"/>
+      <polygon points="112,56 132,56 122,62" fill="#e8fffb" opacity=".55"/>
+      <polygon points="150,58 168,58 162,63" fill="#e8fffb" opacity=".35"/>
+      <rect x="104" y="70" width="76" height="3" fill="#2f9f97" opacity=".55"/>
+    </g>
+  </g>
+
+  <!-- bottom fade + title -->
+  <rect y="176" width="256" height="80" fill="url(#fade)"/>
+  <g font-family="Verdana, 'Segoe UI', sans-serif" font-weight="900" letter-spacing="1">
+    <text x="128" y="228" text-anchor="middle" font-size="42" fill="#f4f7ff" stroke="#120d08" stroke-width="6" paint-order="stroke" stroke-linejoin="round">HC</text>
+    <text x="164" y="228" text-anchor="start" font-size="42" fill="#e23b32" stroke="#120d08" stroke-width="6" paint-order="stroke" stroke-linejoin="round">TIER</text>
+  </g>
+  <g font-family="Verdana, 'Segoe UI', sans-serif" font-weight="900" letter-spacing="1">
+    <text x="128" y="228" text-anchor="middle" font-size="42" fill="#f4f7ff">HC</text>
+    <text x="164" y="228" text-anchor="start" font-size="42" fill="#e23b32">TIER</text>
+  </g>
+</svg>

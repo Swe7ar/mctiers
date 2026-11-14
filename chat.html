@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chat — MCTiers (offline)</title>
+<meta name="description" content="Chat with the tier testers, join a test queue with the code from /tiertest and get ranked.">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="canonical" href="https://crakedmctiers.gg/chat.html">
+<meta property="og:url" content="https://crakedmctiers.gg/chat.html">
+<meta property="og:site_name" content="MCTiers">
+</head>
+<body data-page="chat">
+<div id="chrome-top"></div>
+
+<main class="wrap chat-wrap">
+  <div class="page-head">
+    <h1>Chat</h1>
+    <div class="sub">Join a test with the code from <code>/tiertest</code> and talk to the testers.</div>
+  </div>
+
+  <div class="chat-layout">
+    <!-- ------------------------------------------------------------- left -->
+    <aside class="panel chat-side">
+      <div class="panel-head">
+        Chats
+        <span class="spacer"></span>
+        <button class="btn btn-ghost btn-sm" id="newChatBtn" type="button">+ New</button>
+      </div>
+      <div class="chat-side-list" id="chatList"></div>
+      <div class="chat-side-foot">
+        <div class="tiny muted" id="hubState">connecting…</div>
+      </div>
+    </aside>
+
+    <!-- ------------------------------------------------------------ right -->
+    <section class="panel chat-main">
+      <div class="panel-head" id="chatHead">
+        <span id="chatTitle">Select a chat</span>
+        <span class="spacer"></span>
+        <span class="tiny" id="chatMeta" style="text-transform:none;letter-spacing:0;color:#7d8798"></span>
+      </div>
+
+      <div class="chat-thread" id="chatThread">
+        <div class="chat-empty">
+          <div class="chat-empty-icon">💬</div>
+          <h3>No chat selected</h3>
+          <p class="muted">Create a chat called <b>get tier</b> and paste the code from <code>/tiertest</code>
+             to start a tier test with one of the ranked testers.</p>
+        </div>
+      </div>
+
+      <div class="chat-composer" id="chatComposer" hidden>
+        <div class="chat-code-hint" id="chatCodeHint" hidden>
+          <div class="chat-code-title">Paste your tier test code</div>
+          <div class="chat-code-body">
+            <input class="input" id="codeInput" placeholder="e.g. K3PX9Q" maxlength="8" autocomplete="off" spellcheck="false">
+            <button class="btn btn-primary btn-sm" id="codeSubmit" type="button">Join</button>
+          </div>
+          <div class="err" id="codeErr"></div>
+          <div class="tiny muted">Run <code>/tiertest</code> on the server to get your code.</div>
+        </div>
+        <div class="chat-msg-row" id="msgRow" hidden>
+          <input class="input" id="msgInput" placeholder="Write a message…" autocomplete="off">
+          <button class="btn btn-primary btn-sm" id="msgSend" type="button">Send</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------------------------------------------------------- testers -->
+    <aside class="panel chat-testers" id="testerPanel">
+      <div class="panel-head">Test queue <span class="spacer"></span><span class="tiny" id="queueWho" style="text-transform:none;letter-spacing:0;color:#7d8798"></span></div>
+      <div class="chat-queue" id="chatQueue"></div>
+      <div id="awardBlock" hidden>
+        <div class="panel-head" style="border-top:1px solid var(--border)">Award a tier</div>
+        <div class="chat-award">
+          <div class="tiny muted" id="awardTarget">Select a test first</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+            <select class="select" id="awardGm" style="flex:1;min-width:130px"></select>
+            <select class="select" id="awardTier" style="flex:1;min-width:110px"></select>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn btn-primary btn-sm" id="awardBtn" type="button" style="flex:1">Set tier</button>
+            <button class="btn btn-ghost btn-sm" id="finishBtn" type="button">Finish</button>
+          </div>
+          <div class="err" id="awardErr"></div>
+          <div class="tiny muted" style="margin-top:6px">Testers can never set their own tier.</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<div id="chrome-footer"></div>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/fx.js"></script>
+<script src="assets/js/chat.js"></script>
+</body>
+</html>

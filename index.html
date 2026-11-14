@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCTiers — Minecraft PvP Tier List &amp; Player Rankings</title>
+<meta name="description" content="MCTiers is a Minecraft PvP tier list. Players are ranked in eight gamemodes from HT1 to LT5 and combined into one overall leaderboard. Works offline.">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="canonical" href="https://crakedmctiers.gg/index.html">
+<meta property="og:url" content="https://crakedmctiers.gg/index.html">
+<meta property="og:site_name" content="MCTiers">
+<script>try{var t=localStorage.getItem('mctiers.theme.v1');if(t&&t!=='glass')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body data-page="home">
+<div id="chrome-top"></div>
+
+<main class="wrap">
+  <section class="hero">
+    <img class="hero-logo" src="assets/logo.svg" alt="MCTiers">
+    <h1>The <span class="grad-text">Minecraft PvP</span> Tier List</h1>
+    <p>MCTiers is a Minecraft PvP tier list. Players are tested in eight gamemodes, placed in tiers from Tier 1 to Tier 5, and ranked on one overall leaderboard. This copy runs entirely offline.</p>
+    <div class="hero-actions">
+      <a class="btn btn-ghost" href="rankings.html?gm=overall">View rankings</a>
+      <a class="btn btn-primary" href="server-ip.html">Get tier tested</a>
+      <a class="btn btn-ghost" href="account.html">Create an account</a>
+    </div>
+  </section>
+
+  <div class="ticker" id="ticker" aria-hidden="true"></div>
+
+  <section class="section" style="margin-top:28px">
+    <div class="panel">
+      <div class="panel-head">
+        <img src="assets/icons/tier_1.svg" width="16" height="16" alt="">
+        Top players
+        <span class="spacer"></span>
+        <a href="rankings.html?gm=overall">Full leaderboard →</a>
+      </div>
+      <div class="tp-list" id="top-players"></div>
+      <div class="panel-foot">
+        <span class="tiny" style="letter-spacing:.09em;color:#7d8798;font-weight:700">SERVER IP</span>
+        <a href="server-ip.html" style="display:flex;align-items:center;gap:8px">
+          <img class="server-icon" src="assets/img/server.png" alt="HC TIER server" onerror="this.onerror=null;this.src='assets/img/server.svg'">
+          <span>
+            <span style="font-weight:700;font-size:14px">CrackedMCTiers</span><br>
+            <span style="font-family:ui-monospace,monospace;font-size:13.5px">130.78.218.210:25606</span><br>
+            <span class="tiny" style="color:#7ee0a1"><span class="live-dot"></span> Online · Java &amp; Bedrock</span>
+          </span>
+        </a>
+        <a class="btn btn-ghost btn-sm" style="margin-left:auto" href="server-ip.html">Server IP →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Gamemodes</h2>
+    <div class="gm-grid" id="gm-grid"></div>
+  </section>
+
+  <section class="section" id="tier-test">
+    <div class="panel">
+      <div class="panel-head">Get tier tested <span class="spacer"></span><a href="guides.html">How it works →</a></div>
+      <div style="padding:16px 18px 0;color:var(--muted-foreground);font-size:14px">
+        Tier tests happen on our server, <b style="color:#fff">130.78.218.210:25606</b>. Choose a gamemode, fight one of our testers and earn an official tier.
+      </div>
+      <div class="panel-foot" style="border-top:0;padding-top:14px">
+        <a class="btn btn-primary btn-sm" href="server-ip.html">130.78.218.210:25606</a>
+        <a class="btn btn-ghost btn-sm" href="guides.html">Learn more →</a>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">1</span>
+          <div><h4>Join the server</h4><p>130.78.218.210:25606 on Java 1.21–1.21.8 or Bedrock, then type <b>/tiertest</b>.</p></div>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <div><h4>Pick a gamemode</h4><p>Choose the gamemode and region you want to be tested in.</p></div>
+        </div>
+        <div class="step">
+          <span class="step-num">3</span>
+          <div><h4>Play your test</h4><p>A tester in your region takes you to a private arena with the official kit.</p></div>
+        </div>
+      </div>
+      <div class="callout">
+        <span>✦</span>
+        <span>Your new tier is added to your MCTiers profile after the test. In this offline copy, the <b>admin</b> sets tiers for every player from the <a href="account.html" style="color:#f6e2a8;text-decoration:underline">admin panel</a>.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Tiers and points</h2>
+    <p class="section-sub">Each gamemode has five tiers, split into High and Low. Your tier points add up across the eight gamemodes to give one overall ranking.</p>
+    <div class="split">
+      <div class="panel" style="overflow:hidden">
+        <div class="panel-head">Tier points</div>
+        <table class="dtable" id="tier-table">
+          <thead><tr><th>Tier</th><th class="num">Points</th><th>Meaning</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="panel" style="overflow:hidden">
+        <div class="panel-head">Titles <span class="spacer"></span><span class="tiny muted" style="text-transform:none;letter-spacing:0">by total points</span></div>
+        <div id="title-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="events">
+    <h2 class="section-title">Upcoming events</h2>
+    <div class="events" id="event-list"></div>
+    <div style="margin-top:12px"><a class="btn btn-ghost btn-sm" href="events.html">All events →</a></div>
+  </section>
+
+  <section class="section" id="faq">
+    <h2 class="section-title">Frequently asked questions</h2>
+    <div class="faq">
+      <details open>
+        <summary><span class="q">01</span> What is MCTiers? <span class="plus">+</span></summary>
+        <div class="a">MCTiers is a Minecraft PvP tier list. It ranks players in eight gamemodes (Vanilla/Crystal PvP, UHC, Pot, NethOP, SMP, Sword, Axe and Mace) from High Tier 1 to Low Tier 5, and combines those tiers into one overall leaderboard.</div>
+      </details>
+      <details>
+        <summary><span class="q">02</span> What do HT1, LT1 and the other tiers mean? <span class="plus">+</span></summary>
+        <div class="a">Each gamemode has five tiers, and Tier 1 is the best. Every tier is split into High (HT) and Low (LT), so HT1 is the highest rank a player can hold and LT5 the lowest. The full order is HT1, LT1, HT2, LT2 and so on down to LT5.</div>
+      </details>
+      <details>
+        <summary><span class="q">03</span> How do I get tier tested? <span class="plus">+</span></summary>
+        <div class="a">Join 130.78.218.210:25606 on Java or Bedrock and type <b>/tiertest</b>. Choose the gamemode you want to be ranked in and your region to join that gamemode's testing queue. When a tester in your region is free, you're moved to a private arena with the official kit, and your tier is added to your MCTiers profile after the test.</div>
+      </details>
+      <details>
+        <summary><span class="q">04</span> How is the overall leaderboard calculated? <span class="plus">+</span></summary>
+        <div class="a">Every tier is worth points: HT1 60, LT1 45, HT2 30, LT2 20, HT3 10, LT3 6, HT4 4, LT4 3, HT5 2 and LT5 1. A player's points from all gamemodes are added together and the overall leaderboard is sorted by that total. When a player has reached a higher peak tier, the peak is what counts.</div>
+      </details>
+      <details>
+        <summary><span class="q">05</span> What are titles like Combat Master? <span class="plus">+</span></summary>
+        <div class="a">Titles reflect a player's total points: Rookie below 10 points, Combat Novice from 10, Combat Cadet from 20, Combat Specialist from 50, Combat Ace from 100, Combat Master from 250 and Combat Grandmaster from 400.</div>
+      </details>
+      <details>
+        <summary><span class="q">06</span> How do I look up a player's tiers? <span class="plus">+</span></summary>
+        <div class="a">Use the search box at the top of any page (press <b>/</b> to jump to it) and enter a Minecraft username. The profile shows the player's overall placement, points, title and every tier they hold.</div>
+      </details>
+      <details>
+        <summary><span class="q">07</span> How do accounts work? <span class="plus">+</span></summary>
+        <div class="a">Players create a local account with the name they want listed — no email, no Mojang or Microsoft login. Accounts live only in this browser. The <b>admin</b> (username <b>admin</b>) is the only one who can set or change tiers; players see their profile read-only.</div>
+      </details>
+      <details>
+        <summary><span class="q">08</span> Does this work without internet? <span class="plus">+</span></summary>
+        <div class="a">Yes. Gamemodes, points and titles are bundled with the site, and accounts are stored locally. Only the optional 3D skin renders come from the network — without a connection the site draws a generated pixel avatar instead.</div>
+      </details>
+    </div>
+  </section>
+</main>
+
+<div id="chrome-footer"></div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/fx.js"></script>
+</body>
+</html>

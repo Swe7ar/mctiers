@@ -1,0 +1,45 @@
+# MCTiers tier test bridge
+#
+# The plugin talks to the tier hub on the website machine.
+# The token must match the one the hub uses (TIERHUB_TOKEN environment
+# variable, default "mctiers-local").
+
+hub:
+  # The game plugin reaches the tier hub over the loopback (same machine).
+  url: "http://localhost:4173"
+  # Shared secret between the plugin and the website hub.
+  token: "mctiers-local"
+  # How often the plugin checks the hub for new requests (in ticks, 20 = 1s).
+  poll-interval-ticks: 40
+  # Public website URL - clicking the code in chat opens this with the code ready to paste.
+  # Host the site on the game server and point this at it (http://<ip>:8080 now,
+  # or https://crakedmctiers.gg/chat.html once the domain is bought and pointed).
+  website: "http://130.78.218.210:8080/chat.html"
+
+server:
+  # Name shown in the server list and used as the MOTD.
+  name: "CrackedMCTiers"
+  # First MOTD line (the server list title). & colour codes work.
+  motd: "&6&lCrackedMCTiers &8- &7Cracked PvP tier list &8- &f130.78.218.210:25606"
+  # Write the MOTD into server.properties on start (restart to apply).
+  write-server-properties: true
+
+# Tier tag - the highest tier a player holds on the website is applied in game.
+tier-tag:
+  # Show the coloured [TIER] tag in front of the player's name.
+  enabled: true
+  # %tier% is replaced with the tier, e.g. [HT1]
+  format: "[%tier%] "
+
+messages:
+  prefix: "&8[&6TierTest&8] &r"
+  code-issued: "&aYour tier test code is &f&l%code%&a."
+  code-hint: "&7Paste it on the website: open Chat - New - name it get tier - paste the code."
+  code-reset: "&7Your old code &f%code% &7was dropped."
+  code-none: "&7You do not have a tier test code right now."
+  code-duplicate: "&eYou already have a code (&f%code%&e). Use /tiertest reset first."
+  tester-ready: "&aA tester &f%tester% &ais ready to test you. Check the website chat!"
+  tester-notify: "&eNew tier test request from &f%player% &e(code &f%code%&e)."
+  tier-set: "&aYour tiers are now &f%tiers%&a."
+  tier-none: "&7You do not have any tiers yet. Run /tiertest to get ranked."
+  hub-offline: "&cThe tier hub is not reachable. Is the website server running?"

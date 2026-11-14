@@ -1,0 +1,21 @@
+# انسخ هذا الملف إلى /etc/systemd/system/mctiers-site.service
+# ثم:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now mctiers-site
+[Unit]
+Description=MCTiers website and tier hub
+After=network.target
+
+[Service]
+Type=simple
+User=mctiers
+Group=mctiers
+WorkingDirectory=/home/mctiers/site
+ExecStart=/usr/bin/node tools/serve.mjs 8080
+Restart=always
+RestartSec=5
+Environment=TIERHUB_TOKEN=mctiers-local
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

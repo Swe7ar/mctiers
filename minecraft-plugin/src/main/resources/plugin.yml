@@ -1,0 +1,31 @@
+name: MCTiersTierTest
+version: '1.0.0'
+main: gg.craked.mctiers.TierTestPlugin
+api-version: '1.21'
+description: Issues tier test codes and syncs them with the MCTiers website chat.
+author: crakedmctiers.gg
+website: https://crakedmctiers.gg
+folia-supported: false
+
+commands:
+  tiertest:
+    description: Get a tier test code to paste in the website chat.
+    usage: /tiertest [reset|list]
+    aliases: [tt, tier]
+    permission: mctiers.tiertest
+  tiers:
+    description: Show the tiers you currently hold.
+    usage: /tiers
+    aliases: [mytiers]
+    permission: mctiers.tiers
+
+permissions:
+  mctiers.tiertest:
+    description: Allows a player to request a tier test code.
+    default: true
+  mctiers.tiers:
+    description: Allows a player to see their tiers.
+    default: true
+  mctiers.tiertest.admin:
+    description: Allows staff to list the open tier test requests.
+    default: op
