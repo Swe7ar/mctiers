@@ -68,6 +68,36 @@ Turn the tag off with `tier-tag.enabled: false` in `config.yml`.
 | `/tiertest reset` | `mctiers.tiertest` | Drop your current code |
 | `/tiertest list` | `mctiers.tiertest.admin` | Point staff at the website queue |
 | `/tiers` | `mctiers.tiers` | Show the tiers you currently hold |
+| `/register <password>` | `mctiers.auth` | Create an offline account (teleports you to the void, then login) |
+| `/login <password>` | `mctiers.auth` | Log in and teleport from the void to spawn |
+| `/logout` | `mctiers.auth` | Log out and sent back to the void |
+| `/skin <name>` | `mctiers.skin` | Pull the skin from Mojang for that account (not offline-limited) |
+
+## Offline login
+
+The server runs in offline mode, so Minecraft cannot authenticate people — the plugin does it:
+
+1. Player joins. If they are not logged in, the plugin teleports them to the void world and
+   freezes them (no movement, no interactions, no commands except `/register` and `/login`).
+2. `/register <password>` — account is created (SHA-256 hashed, with a per-account salt),
+   the player is marked as logged in and teleported back to spawn.
+3. `/login <password>` — password check, then teleported to spawn.
+4. `/logout` — back to the void.
+
+Passwords live in `plugins/MCTiersTierTest/auth.yml` (salted SHA-256). Never stored in plaintext.
+
+## Skins from namemc.com
+
+Players can change their skin to any name style from Mojang's records:
+
+```
+/skin Notch
+/skin ilMango
+```
+
+The plugin looks up the name on `api.mojang.com`, fetches the textures from Mojang's session
+server and applies them to the player so the skin is visible to everyone online. Names must be
+actual Mojang accounts.
 
 ## One click from the game to the website
 
