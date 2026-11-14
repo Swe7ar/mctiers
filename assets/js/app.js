@@ -703,30 +703,6 @@
     return acc;
   }
 
-  /** Seed the demo roster with real players the first time the site runs.
-      Never touches existing accounts — only fills in when there are none. */
-  function seedRoster(force) {
-    const all = Store.accounts();
-    const players = Object.keys(all).filter((k) => all[k].role !== "admin");
-    if (players.length && !force) return 0;
-    const roster = D.roster || [];
-    roster.forEach((r) => {
-      const acc = {
-        name: r.name,
-        role: "player",
-        region: r.region || "NA",
-        pass: null,
-        tiers: Object.assign({}, r.tiers || {}),
-        since: Object.assign({}, r.since || {}),
-        skin: r.skin || null,
-        bio: r.bio || "",
-        createdAt: new Date().toISOString(),
-      };
-      Store.saveAccount(acc);
-    });
-    return roster.length;
-  }
-
   /* ------------------------------------------------------------ tier hub */
 
   /** Merge the shared tier-test hub (server + plugin) into the local roster. */
@@ -2164,7 +2140,6 @@
       <div class="menu-grid">
         <button class="menu-card" id="exportBtn"><span class="t">Export roster</span><span class="d">Download every local account as JSON.</span></button>
         <label class="menu-card" style="cursor:pointer"><span class="t">Import roster</span><span class="d">Restore accounts from a backup file.</span><input type="file" id="importFile" accept="application/json" hidden></label>
-        <button class="menu-card" id="reseedBtn"><span class="t">Restore demo roster</span><span class="d">Replace all player accounts with the real-player roster.</span></button>
         <button class="menu-card" id="syncHubBtn"><span class="t">Sync roster to the game hub</span><span class="d">Push every tier and profile to the server so the plugin picks it up.</span></button>
         <button class="menu-card" id="logoutBtn"><span class="t">Sign out</span><span class="d">Leave the admin panel.</span></button>
       </div>`;
@@ -2233,21 +2208,6 @@
       toast("Roster exported");
     });
 
-    const reseed = $("#reseedBtn");
-    if (reseed) {
-      reseed.addEventListener("click", () => {
-        if (!confirm("Replace every player account with the real-player demo roster?")) return;
-        const all = Store.accounts();
-        Object.keys(all).forEach((k) => {
-          if (all[k].role !== "admin") Store.removeAccount(all[k].name);
-        });
-        const n = seedRoster(true);
-        toast(n + " players restored");
-        pushAllToHub().then(() => toast("Roster pushed to the game hub"));
-        refreshChrome();
-        renderAdmin(root, admin, false);
-      });
-    }
     const syncBtn = $("#syncHubBtn");
     if (syncBtn) {
       syncBtn.addEventListener("click", async () => {
@@ -2479,7 +2439,6 @@
 
   function init() {
     seedAdmin();
-    seedRoster(false);
     setMotion(motionEnabled());
     setTheme(themeName());
     installSkinFallback();

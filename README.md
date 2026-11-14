@@ -136,15 +136,12 @@ Effects layer (`assets/js/fx.js`):
 
 ## The roster
 
-The site ships with a **demo roster of 21 real Minecraft PvP players** (Technoblade, Dream,
-TommyInnit, GeorgeNotFound, Sapnap, Vechs, ilMango, …) defined in `assets/js/data.js` under `roster`.
+The site starts with **no players**. Players register themselves with a name, region and optional
+Minecraft skin; only the admin can set tiers (player profiles are read-only for everyone else).
 
-- On the very first run — when no player account exists yet — the roster is seeded into
-  `localStorage` with tiers in all eight gamemodes, a region, a date and a written description.
-  Your own accounts are never overwritten.
-- Each player has a **Minecraft username**, so their real skin is pulled from mc-heads when the
-  browser is online (with a generated pixel avatar as the offline fallback).
-- The admin can restore the demo roster at any time with **Restore demo roster** in the admin panel.
+- Player accounts are stored in `localStorage` — each browser has its own roster.
+- The admin sets tiers from **Admin panel → Edit tiers** (`account.html?edit=Name`).
+- The admin can sync the local roster into the game hub with **Sync roster to the game hub**.
 
 ## Admin: editing a player
 
@@ -153,7 +150,7 @@ Open a player from the roster table (`account.html?edit=Name`) and the admin get
 - **Description** — a 400 character text area that replaces the auto-generated summary on the
   player's profile.
 - **Profile look** — the full editor (avatar/skin upload, Discord avatar link, banner, wallpaper)
-  applied to *that* player, so the admin can change the picture of anyone in the roster.
+  applied to *that* player, so the admin can change the picture of anyone.
 - **Tier selects** for all eight gamemodes, saving instantly.
 
 ## Profile look (skin, banner, wallpaper)
