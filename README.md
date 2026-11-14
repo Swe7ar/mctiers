@@ -8,7 +8,23 @@ A static Minecraft PvP tier list site (domain: crakedmctiers.gg, server IP: 130.
 runs with no backend. The roster starts empty: players create local accounts, and a single **admin**
 account sets every tier. Points, titles and the overall leaderboard are calculated in the browser.
 
-## Open it
+## Host this repo for free on Render
+
+The site + the tier hub are a single Node process, so you can host everything for free:
+
+1. Create a free account at **render.com** (sign in with GitHub).
+2. Click **New +** → **Web Service** → connect the `Swe7ar/mctiers` repo.
+3. Pick the **Free** instance type. Region: Singapore / Oregon / Frankfurt — any.
+4. Build Command: `npm install` and Start Command: `node tools/serve.mjs`.
+5. Click **Deploy Web Service**.
+6. When it shows **Live**, copy the URL, e.g. `https://mctiers.onrender.com`.
+   - The site is at `https://<your-render-url>/` and the hub at `https://<your-render-url>/api/tiertest/state`.
+7. Set that URL in the plugin `config.yml`:
+   - `hub.url: "https://<your-render-url>"`
+   - `hub.website: "https://<your-render-url>/chat.html"`
+   - Rebuild the jar (`mvn clean package`) and install it on the Minecraft server.
+
+> Free instance sleeps after 15 minutes of inactivity and takes ~30 seconds to wake on the next request. That is fine for a community tier-test site.
 
 **Easiest:** double-click `start.bat`. It starts the preview server and prints the URLs.
 
