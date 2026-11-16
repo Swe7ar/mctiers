@@ -19,6 +19,10 @@
   /* The real players. Edit assets/js/roster.js — every visitor sees this list. */
   const ROSTER = Array.isArray(window.MCTIERS_ROSTER) ? window.MCTIERS_ROSTER : [];
 
+  /* GitHub Pages (and file://) has no /api/tiertest — skip the calls instead of 404s. */
+  const HUB_DISABLED =
+    /(^|\.)github\.io$/i.test(location.hostname) || location.protocol === "file:";
+
   const pointsFor = (tier) => D.points[tier] || 0;
   function titleFor(points) {
     let out = D.titles[0];
@@ -767,7 +771,7 @@
 
   /** Merge the shared tier-test hub (server + plugin) into the local roster. */
   async function syncHub() {
-    if (typeof fetch !== "function") return;
+    if (HUB_DISABLED || typeof fetch !== "function") return;
     let data = null;
     try {
       const res = await fetch("/api/tiertest/state");
@@ -826,7 +830,7 @@
 
   /** Push a profile change (picture / description) to the shared hub. */
   function pushProfile(acc) {
-    if (!acc || typeof fetch !== "function") return;
+    if (HUB_DISABLED || !acc || typeof fetch !== "function") return;
     try {
       fetch("/api/tiertest/profile", {
         method: "POST",
@@ -848,7 +852,7 @@
 
   /** Push every local tier and profile to the shared hub in one request. */
   async function pushAllToHub() {
-    if (typeof fetch !== "function") return 0;
+    if (HUB_DISABLED || typeof fetch !== "function") return 0;
     /* On static hosts there is no hub — skip quietly instead of 405s. */
     try {
       const probe = await fetch("/api/tiertest/state", { method: "GET" });
@@ -908,7 +912,7 @@
 
   /** Push a tier change to the shared hub so the game server picks it up. */
   function pushTier(acc, gm, tier) {
-    if (!acc || typeof fetch !== "function") return;
+    if (HUB_DISABLED || !acc || typeof fetch !== "function") return;
     try {
       fetch("/api/tiertest/admin-tier", {
         method: "POST",

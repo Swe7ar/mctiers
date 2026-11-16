@@ -8,6 +8,8 @@
 
   const $ = (s, r) => (r || document).querySelector(s);
   const API = "/api/tiertest";
+  const STATIC_HOST =
+    /(^|\.)github\.io$/i.test(location.hostname) || location.protocol === "file:";
 
   let me = null;
   let state = { codes: {}, rooms: {}, tiers: {}, profiles: {} };
@@ -485,7 +487,14 @@
       code = null;
     }
 
-    /* First refresh decides whether the hub exists (GitHub Pages = no /api). */
+    /* GitHub Pages / file:// has no hub — render the offline notice without a 404. */
+    if (STATIC_HOST) {
+      setHubAvailable(false);
+      render();
+      return;
+    }
+
+    /* First refresh decides whether the hub exists (a Node host has /api). */
     refresh().then(() => {
       if (code && hubAvailable) openTierFlow(code);
       /* Only sync with the hub when the hub exists (not on GitHub Pages). */
