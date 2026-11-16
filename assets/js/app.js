@@ -1,6 +1,6 @@
 /* ==========================================================================
    MCTiers — offline edition
-   Static site. The roster lives in localStorage; only the admin can set tiers.
+   Static site. Players come from assets/js/roster.js; only the admin sets tiers.
    ========================================================================== */
 (function () {
   "use strict";
@@ -15,6 +15,9 @@
   const TIER_ORDER = ["HT1", "LT1", "HT2", "LT2", "HT3", "LT3", "HT4", "LT4", "HT5", "LT5"];
   const ADMIN_NAME = "admin";
   const ADMIN_PASSWORD = "admin1234";
+
+  /* The real players. Edit assets/js/roster.js — every visitor sees this list. */
+  const ROSTER = Array.isArray(window.MCTIERS_ROSTER) ? window.MCTIERS_ROSTER : [];
 
   const pointsFor = (tier) => D.points[tier] || 0;
   function titleFor(points) {
@@ -703,6 +706,63 @@
     return acc;
   }
 
+  /**
+   * Copy the roster file into localStorage so every visitor sees the same players.
+   * An entry is re-applied only when it changed in roster.js (tracked by rosterHash),
+   * so tiers saved from the admin panel are not wiped on reload.
+   */
+  function seedRoster() {
+    if (!ROSTER.length) return 0;
+    const all = Store.accounts();
+    let changed = 0;
+
+    ROSTER.forEach((raw) => {
+      if (!raw || !raw.name) return;
+      const name = String(raw.name).trim();
+      if (!validName(name) || name.toLowerCase() === ADMIN_NAME) return;
+
+      const key = name.toLowerCase();
+      let hash = "";
+      try {
+        hash = JSON.stringify(raw);
+      } catch (e) {
+        hash = "";
+      }
+
+      const existing = all[key];
+      if (existing && hash && existing.rosterHash === hash) return;
+
+      const tiers = {};
+      Object.keys(raw.tiers || {}).forEach((gm) => {
+        const tier = String(raw.tiers[gm] || "").trim().toUpperCase();
+        if (GM[gm] && D.points[tier]) tiers[gm] = tier;
+      });
+      const since = {};
+      Object.keys(raw.since || {}).forEach((gm) => {
+        if (tiers[gm]) since[gm] = String(raw.since[gm]);
+      });
+
+      all[key] = {
+        name,
+        role: "player",
+        region: raw.region || (existing && existing.region) || "NA",
+        skin: skinRef(raw.skin || name) || name,
+        bio: raw.bio || "",
+        banner: raw.banner || null,
+        wallpaper: raw.wallpaper || null,
+        tiers,
+        since,
+        source: "roster",
+        rosterHash: hash,
+        createdAt: (existing && existing.createdAt) || new Date().toISOString(),
+      };
+      changed++;
+    });
+
+    if (changed) Store.write(KEY_ACCOUNTS, all);
+    return changed;
+  }
+
   /* ------------------------------------------------------------ tier hub */
 
   /** Merge the shared tier-test hub (server + plugin) into the local roster. */
@@ -1302,8 +1362,8 @@
              <div class="empty-icon">🏆</div>
              <div>
                <div class="empty-title">No ranked players yet</div>
-               <p class="small muted" style="margin:4px 0 10px">The roster starts empty. Create an account, then the admin sets the tiers.</p>
-               <a class="btn btn-primary btn-sm" href="account.html">Create an account</a>
+               <p class="small muted" style="margin:4px 0 10px">Nobody on the roster has a tier yet. Add players in <b>assets/js/roster.js</b>.</p>
+               <a class="btn btn-primary btn-sm" href="account.html">Admin login</a>
              </div>
            </div>`;
       initProfilePopups(host);
@@ -1587,9 +1647,9 @@
     if (!list.length) {
       return `<div class="rank-empty">${emptyBlock(
         "The leaderboard is empty",
-        "Nobody has a tier yet. Create an account, then log in as <b>admin</b> to add tiers.",
+        "Nobody on the roster has a tier yet. Add players in <b>assets/js/roster.js</b>, then sign in as <b>admin</b> to set their tiers.",
         "account.html",
-        "Create an account"
+        "Admin login"
       )}</div>${infoPanel}`;
     }
     const me = Store.session();
@@ -1698,9 +1758,9 @@
     if (!p) {
       root.innerHTML = `<div class="panel panel-pad" style="margin-top:40px">${emptyBlock(
         "Player not found",
-        `“${esc(name)}” is not registered on this device. Accounts are local — create one here, then ask the admin to set tiers.`,
-        "account.html",
-        "Create an account"
+        `“${esc(name)}” is not on the roster. Ask the admin to add that Minecraft name in <b>assets/js/roster.js</b>.`,
+        "rankings.html?gm=overall",
+        "Back to the leaderboard"
       )}</div>`;
       document.title = "Player not found — MCTiers";
       return;
@@ -1831,7 +1891,7 @@
     if (p.bio) return esc(p.bio);
     if (p.role === "admin") return `${esc(p.name)} is the site admin. Staff accounts can set tiers for every player but are not ranked themselves.`;
     const parts = p.tiers.map((t) => `<b>${esc(t.tier)}</b> in ${esc(GM[t.gm] ? GM[t.gm].full : t.gm)}`);
-    if (!parts.length) return `${esc(p.name)} is registered but has no tiers yet. The admin adds tiers after a test.`;
+    if (!parts.length) return `${esc(p.name)} is on the roster but has no tiers yet. The admin adds tiers after a test.`;
     const last = parts.length > 1 ? parts.pop() : null;
     const total = typeof boardCount === "number" ? boardCount : (typeof leaderboard === "function" ? leaderboard().length : 0);
     return `${esc(p.name)} is a ${esc(regionName(p.region))} Minecraft PvP player ranked <b>#${p.rank}</b> of ${total} with <b>${p.points} points</b> (${esc(p.title)}): ${parts.join(", ")}${last ? " and " + last : ""}.`;
@@ -1849,69 +1909,45 @@
   }
 
   function renderAuth(root) {
-    const accounts = Store.accounts();
-    const players = Object.keys(accounts).length;
+    const listed = playerAccounts().length;
     root.innerHTML = `
       <div class="page-head">
-        <h1>Log in</h1>
-        <div class="sub">Accounts are local to this browser. Tiers are set by the admin.</div>
+        <h1>Admin login</h1>
+        <div class="sub">Only the site admin signs in. Players are listed in <b>assets/js/roster.js</b>.</div>
       </div>
       <div class="offline-note">
-        <span>⚙</span>
-        <span><b>Admin login:</b> username <b>admin</b> · password <b>admin1234</b>. Only the admin can edit tiers; everyone else is read-only.</span>
+        <span>📋</span>
+        <span><b>${listed}</b> player${listed === 1 ? "" : "s"} on the roster. To add or remove people, edit <b>assets/js/roster.js</b> and push to GitHub — everyone sees the change.</span>
       </div>
       <div class="auth-wrap">
-        <form class="panel" id="createForm" autocomplete="off">
-          <div class="panel-head">Create a player account</div>
+        <div class="panel">
+          <div class="panel-head">Add players (for the owner)</div>
           <div class="panel-pad">
-            <div class="form-row">
-              <label for="newName">Player name</label>
-              <input class="input" id="newName" maxlength="16" placeholder="e.g. SkyeRanks" required>
-              <div class="hint">3–16 characters: letters, numbers and underscores. This is your listing name.</div>
-            </div>
-            <div class="form-row">
-              <label for="newPass">Password <span class="muted">(optional, local only)</span></label>
-              <input class="input" id="newPass" type="password" placeholder="Anything you'll remember">
-            </div>
-            <div class="form-row">
-              <label for="newRegion">Region</label>
-              <select class="select" id="newRegion">
-                ${Object.entries(D.regions).map(([k, v]) => `<option value="${k}">${esc(v)} (${k})</option>`).join("")}
-              </select>
-            </div>
-            <div class="form-row">
-              <label for="newSkin">Minecraft skin <span class="muted">(optional)</span></label>
-              <input class="input" id="newSkin" placeholder="Notch or https://namemc.com/profile/Notch">
-              <div class="hint">Paste your Minecraft name or NameMC link. It can be changed later from your account.</div>
-            </div>
-            <div class="err" id="createErr"></div>
-            <button class="btn btn-primary" type="submit" style="width:100%">Create account</button>
+            <ol class="small" style="margin:0;padding-left:18px;line-height:1.9;color:#9fb0c3">
+              <li>Open <b>assets/js/roster.js</b>.</li>
+              <li>Copy the template inside the comments.</li>
+              <li>Set <b>name</b> to the player's real Minecraft username.</li>
+              <li>Save, commit and push to GitHub.</li>
+            </ol>
+            <div class="hint" style="margin-top:10px">The skin and face load from that Minecraft name automatically.</div>
+            <a class="btn btn-ghost btn-sm" href="rankings.html?gm=overall" style="margin-top:12px">View the leaderboard</a>
           </div>
-        </form>
+        </div>
 
         <form class="panel" id="loginForm" autocomplete="off">
-          <div class="panel-head">Sign in on this device</div>
+          <div class="panel-head">Admin sign in</div>
           <div class="panel-pad">
-            ${
-              players
-                ? `<div class="form-row"><label>Saved accounts</label>
-                    <div style="display:flex;flex-direction:column;gap:6px">
-                      ${Object.values(accounts)
-                        .map((a) => `<button type="button" class="btn btn-ghost" data-pick="${esc(a.name)}" style="justify-content:flex-start">${face(a.name, a.skin, "", 24)}<span>${esc(a.name)}</span><span class="tiny muted" style="margin-left:auto">${isAdmin(a) ? "admin" : gmCount(a.tiers) + " tiers"}</span></button>`)
-                        .join("")}
-                    </div></div>`
-                : `<p class="small muted" style="margin-top:0">No accounts on this device yet.</p>`
-            }
-            <div class="form-row" style="margin-top:14px">
+            <div class="form-row">
               <label for="loginName">Username</label>
-              <input class="input" id="loginName" placeholder="admin">
+              <input class="input" id="loginName" placeholder="admin" value="admin">
             </div>
             <div class="form-row">
               <label for="loginPass">Password</label>
-              <input class="input" id="loginPass" type="password" placeholder="Leave empty if you set none">
+              <input class="input" id="loginPass" type="password" placeholder="admin1234">
             </div>
             <div class="err" id="loginErr"></div>
-            <button class="btn btn-ghost" type="submit" style="width:100%">Sign in</button>
+            <button class="btn btn-primary" type="submit" style="width:100%">Sign in as admin</button>
+            <div class="hint" style="margin-top:10px">Default: admin / admin1234 — change <b>ADMIN_PASSWORD</b> in <b>assets/js/app.js</b>.</div>
           </div>
         </form>
       </div>
@@ -1920,58 +1956,15 @@
         <h2 class="section-title">How this works</h2>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" class="how-grid">
           ${[
-            ["1 · Players register", "Create an account with the name you want listed. No email, no Mojang login — it stays in this browser."],
-            ["2 · Admin sets tiers", "Log in as admin to give players HT1–LT5 in any of the eight gamemodes."],
-            ["3 · Leaderboard updates", "Points, titles and the overall ranking are calculated from the tiers the admin saves."],
+            ["1 · You add the player", "Put their Minecraft name in assets/js/roster.js. They appear on the site for everyone."],
+            ["2 · You set the tier", "Sign in as admin and give them HT1–LT5 in any of the eight gamemodes."],
+            ["3 · Leaderboard updates", "Points, titles and the overall ranking are calculated from the tiers you save."],
           ]
             .map(([t, d]) => `<div class="menu-card"><span class="t">${t}</span><span class="d">${d}</span></div>`)
             .join("")}
         </div>
       </div>`;
-    document.title = "Log in — MCTiers";
-
-    $("#createForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const name = $("#newName").value.trim();
-      const pass = $("#newPass").value;
-      const region = $("#newRegion").value;
-      const err = $("#createErr");
-      if (!validName(name)) {
-        err.textContent = "Name must be 3–16 characters: letters, numbers or underscores.";
-        return;
-      }
-      if (name.toLowerCase() === ADMIN_NAME) {
-        err.textContent = "“admin” is reserved for the site admin.";
-        return;
-      }
-      if (Store.accounts()[name.toLowerCase()]) {
-        err.textContent = "That name is already registered on this device.";
-        return;
-      }
-      const acc = {
-        name,
-        role: "player",
-        region,
-        pass: pass ? hashPassword(pass, name) : null,
-        tiers: {},
-        since: {},
-        skin: skinRef($("#newSkin").value) || null,
-        createdAt: new Date().toISOString(),
-      };
-      Store.saveAccount(acc);
-      Store.login(name);
-      toast(`Welcome, ${name}`);
-      refreshChrome();
-      renderPlayerDash($("#page"), acc, true);
-    });
-
-    $$("[data-pick]").forEach((b) =>
-      b.addEventListener("click", () => {
-        $("#loginName").value = b.getAttribute("data-pick");
-        const acc = Store.accounts()[b.getAttribute("data-pick").toLowerCase()];
-        if (acc && acc.pass) $("#loginPass").focus();
-      })
-    );
+    document.title = "Admin login — MCTiers";
 
     $("#loginForm").addEventListener("submit", (e) => {
       e.preventDefault();
@@ -1979,8 +1972,8 @@
       const pass = $("#loginPass").value;
       const err = $("#loginErr");
       const acc = Store.accounts()[name.toLowerCase()];
-      if (!acc) {
-        err.textContent = "No account with that username on this device.";
+      if (!acc || !isAdmin(acc)) {
+        err.textContent = "Only the site admin can sign in here.";
         return;
       }
       if (acc.pass && acc.pass !== hashPassword(pass, acc.name)) {
@@ -1988,10 +1981,9 @@
         return;
       }
       Store.login(acc.name);
-      toast(`Signed in as ${acc.name}`);
+      toast("Signed in as admin");
       refreshChrome();
-      if (isAdmin(acc)) renderAdmin($("#page"), acc, true);
-      else renderPlayerDash($("#page"), acc, true);
+      renderAdmin($("#page"), acc, true);
     });
   }
 
@@ -2104,11 +2096,16 @@
         <div class="stat"><div class="k">Top player</div><div class="v" style="font-size:15px;padding-top:5px">${board[0] ? esc(board[0].name) : "—"}</div></div>
       </div>
 
+      <div class="offline-note">
+        <span>📋</span>
+        <span><b>${ROSTER.length}</b> player${ROSTER.length === 1 ? "" : "s"} ${ROSTER.length === 1 ? "comes" : "come"} from <b>assets/js/roster.js</b> — that is the list everyone sees. Adding someone here saves them only on this browser.</span>
+      </div>
+
       <div class="panel" style="overflow:hidden;margin-bottom:14px">
-        <div class="panel-head">Add a player</div>
+        <div class="panel-head">Add a player (this browser only)</div>
         <form class="panel-pad" id="addForm" autocomplete="off" style="display:grid;grid-template-columns:1fr 1fr 160px auto;gap:10px;align-items:end">
           <div class="form-row" style="margin:0"><label for="addName">Player name</label><input class="input" id="addName" maxlength="16" placeholder="e.g. SkyeRanks" required></div>
-          <div class="form-row" style="margin:0"><label for="addPass">Password (optional)</label><input class="input" id="addPass" type="text" placeholder="they can change it later"></div>
+          <div class="form-row" style="margin:0"><label for="addSkin">Skin (Minecraft name)</label><input class="input" id="addSkin" maxlength="80" placeholder="same as the player name"></div>
           <div class="form-row" style="margin:0"><label for="addRegion">Region</label>
             <select class="select" id="addRegion">${Object.entries(D.regions).map(([k, v]) => `<option value="${k}">${esc(v)} (${k})</option>`).join("")}</select>
           </div>
@@ -2140,7 +2137,7 @@
                    })
                    .join("")}</tbody>
                </table>`
-            : `<div style="padding:22px;text-align:center;color:#6b7686" class="small">No players yet. Add one above, or share this page — accounts are local to each browser.</div>`
+            : `<div style="padding:22px;text-align:center;color:#6b7686" class="small">No players yet — add them in <b>assets/js/roster.js</b>, or use the form above.</div>`
         }
       </div>
 
@@ -2159,7 +2156,6 @@
     $("#addForm").addEventListener("submit", (e) => {
       e.preventDefault();
       const name = $("#addName").value.trim();
-      const pass = $("#addPass").value;
       const region = $("#addRegion").value;
       const err = $("#addErr");
       if (!validName(name)) {
@@ -2174,14 +2170,16 @@
         err.textContent = "That name already exists.";
         return;
       }
+      const skinInput = $("#addSkin").value.trim();
       Store.saveAccount({
         name,
         role: "player",
         region,
-        pass: pass ? hashPassword(pass, name) : null,
+        pass: null,
         tiers: {},
         since: {},
-        skin: null,
+        skin: skinRef(skinInput || name) || name,
+        source: "admin",
         createdAt: new Date().toISOString(),
       });
       toast(`${name} added`);
@@ -2445,6 +2443,7 @@
   }
 
   function init() {
+    seedRoster();
     seedAdmin();
     setMotion(motionEnabled());
     setTheme(themeName());

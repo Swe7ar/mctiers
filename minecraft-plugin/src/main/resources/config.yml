@@ -30,36 +30,12 @@ tier-tag:
   # %tier% is replaced with the tier, e.g. [HT1]
   format: "[%tier%] "
 
-# Offline login & skins.
-auth:
-  # Name of the void world the plugin creates and uses while players are logged in.
-  void-world: "void"
-  void-x: 0.5
-  void-y: 64
-  void-z: 0.5
-  # Spawn world + coordinates.  Set spawn-y to -1 to use the world spawn location.
-  spawn-world: "world"
-  spawn-x: 0.5
-  spawn-y: -1
-  spawn-z: 0.5
-  # Minimum password length for /register and /login.
-  password-min-length: 4
-  # Server messages. Use & colour codes.
-  messages:
-    void-sent: "&cYou are in the void until you log in."
-    spawn-sent: "&aWelcome back! You can play now."
-    registered: "&aAccount created and you are logged in. Enjoy!"
-    logged-in: "&aWelcome back, you are logged in."
-    logged-out: "&7You logged out and were sent back to the void."
-    not-registered: "&cYou have no account - use &f/register <password>"
-    wrong-password: "&cWrong password."
-    already-registered: "&eYou already have an account - use &f/login <password>"
-    password-too-short: "&cPassword is too short."
-    login-required: "&cPlease use &f/login <password>&c or &f/register <password>&c first."
-    skin.looking-up: "&7Looking up the skin for &f%name%&7..."
-    skin.applied: "&aSkin applied from &f%name%&a! It may take a moment to show up."
-    skin.not-found: "&cNo player named &f%name%&c was found on Mojang."
-    skin.lookup-failed: "&cCould not look up that name. The Mojang API may be down."
+# Skin messages (/skin <name>). Use & colour codes.
+skin:
+  looking-up: "&7Looking up the skin for &f%name%&7..."
+  applied: "&aSkin applied from &f%name%&a! It may take a moment to show up."
+  not-found: "&cNo player named &f%name%&c was found on Mojang."
+  lookup-failed: "&cCould not look up that name. The Mojang API may be down."
 
 messages:
   prefix: "&8[&6TierTest&8] &r"

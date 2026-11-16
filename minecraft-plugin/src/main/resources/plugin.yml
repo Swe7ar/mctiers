@@ -18,20 +18,6 @@ commands:
     usage: /tiers
     aliases: [mytiers]
     permission: mctiers.tiers
-  register:
-    description: Create an offline account and log in.
-    usage: /register <password>
-    aliases: [reg]
-    permission: mctiers.auth
-  login:
-    description: Log in with an existing offline account.
-    usage: /login <password>
-    aliases: [l]
-    permission: mctiers.auth
-  logout:
-    description: Log out and return to the void.
-    usage: /logout
-    permission: mctiers.auth
   skin:
     description: Set your skin to a Mojang skin name.
     usage: /skin <name>
@@ -47,9 +33,6 @@ permissions:
   mctiers.tiertest.admin:
     description: Allows staff to list the open tier test requests.
     default: op
-  mctiers.auth:
-    description: Allows /register, /login and /logout.
-    default: true
   mctiers.skin:
     description: Allows /skin.
     default: true

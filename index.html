@@ -23,7 +23,7 @@
     <div class="hero-actions">
       <a class="btn btn-ghost" href="rankings.html?gm=overall">View rankings</a>
       <a class="btn btn-primary" href="server-ip.html">Get tier tested</a>
-      <a class="btn btn-ghost" href="account.html">Create an account</a>
+      <a class="btn btn-ghost" href="chat.html">Tier test chat</a>
     </div>
   </section>
 
@@ -142,7 +142,7 @@
       </details>
       <details>
         <summary><span class="q">07</span> How do accounts work? <span class="plus">+</span></summary>
-        <div class="a">Players create a local account with the name they want listed — no email, no Mojang or Microsoft login. Accounts live only in this browser. The <b>admin</b> (username <b>admin</b>) is the only one who can set or change tiers; players see their profile read-only.</div>
+        <div class="a">Players are added by the owner in <b>assets/js/roster.js</b> with their real Minecraft name, so the skin and face load automatically. Everyone sees the same roster. The <b>admin</b> (username <b>admin</b>) is the only one who can set or change tiers.</div>
       </details>
       <details>
         <summary><span class="q">08</span> Does this work without internet? <span class="plus">+</span></summary>
@@ -154,6 +154,7 @@
 
 <div id="chrome-footer"></div>
 
+<script src="assets/js/roster.js"></script>
 <script src="assets/js/data.js"></script>
 <script src="assets/js/app.js"></script>
 <script src="assets/js/fx.js"></script>

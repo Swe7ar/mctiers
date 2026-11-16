@@ -48,7 +48,6 @@ public final class TierTestPlugin extends JavaPlugin {
 
     private HubClient hub;
     private BukkitTask poller;
-    private AuthManager auth;
 
     /** code -> player uuid */
     private final Map<String, UUID> codes = new HashMap<>();
@@ -88,36 +87,13 @@ public final class TierTestPlugin extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new JoinListener(this), this);
         registerMotdListener();
         applyServerProperties();
-        this.auth = new AuthManager(this);
-        getLogger().info("Auth manager ready — offline accounts stored in auth.yml");
 
-        /* Create the void world players wait in until they log in. */
-        createVoidWorld();
-
-        /* Auth commands */
-        var authCmd = new AuthCommand(this);
-        var registerCmd = getCommand("register");
-        if (registerCmd != null) {
-            registerCmd.setExecutor(authCmd);
-            registerCmd.setTabCompleter(authCmd);
-        }
-        var loginCmd = getCommand("login");
-        if (loginCmd != null) {
-            loginCmd.setExecutor(authCmd);
-            loginCmd.setTabCompleter(authCmd);
-        }
-        var logoutCmd = getCommand("logout");
-        if (logoutCmd != null) {
-            logoutCmd.setExecutor(authCmd);
-            logoutCmd.setTabCompleter(authCmd);
-        }
         var skinCmd = new SkinCommand(this);
         var skin = getCommand("skin");
         if (skin != null) {
             skin.setExecutor(skinCmd);
             skin.setTabCompleter(skinCmd);
         }
-        Bukkit.getPluginManager().registerEvents(new AuthListener(this), this);
 
         getLogger().info("Tier test bridge ready (hub: " + hub.base() + ")");
     }
@@ -216,92 +192,6 @@ public final class TierTestPlugin extends JavaPlugin {
 
     public HubClient hub() {
         return hub;
-    }
-
-    public AuthManager auth() {
-        return auth;
-    }
-
-    /** Config colour-coded text: auth-void / auth-spawn / skin. */
-    public String c(String key) {
-        return ChatColor.translateAlternateColorCodes('&', getConfig().getString("auth.messages." + key, "&7" + key));
-    }
-
-    /** Teleport a player to the void world (far away from spawn). */
-    public void sendToVoid(Player player) {
-        org.bukkit.Location loc = voidLocation();
-        if (loc != null) {
-            player.teleport(loc);
-            player.sendMessage(c("void-sent"));
-        }
-    }
-
-    /** Teleport a player back to spawn. */
-    public void sendToSpawn(Player player) {
-        org.bukkit.Location loc = spawnLocation();
-        if (loc != null) {
-            player.teleport(loc);
-            player.sendMessage(c("spawn-sent"));
-        }
-    }
-
-    /** Create the void world used while players are logged in. */
-    private void createVoidWorld() {
-        String name = getConfig().getString("auth.void-world", "void");
-        if (Bukkit.getWorld(name) != null) {
-            return;
-        }
-        org.bukkit.WorldCreator creator = new org.bukkit.WorldCreator(name);
-        creator.generator(new VoidChunkGenerator());
-        creator.generateStructures(false);
-        org.bukkit.World world = Bukkit.createWorld(creator);
-        if (world != null) {
-            world.setGameRule(org.bukkit.GameRule.DO_DAYLIGHT_CYCLE, false);
-            world.setTime(6000L);
-            getLogger().info("Created the void world '" + name + "'.");
-        } else {
-            getLogger().warning("Could not create the void world — check your worlds folder.");
-        }
-    }
-
-    private org.bukkit.Location voidLocation() {
-        String world = getConfig().getString("auth.void-world", "void");
-        org.bukkit.World w = Bukkit.getWorld(world);
-        if (w == null) {
-            return null;
-        }
-        double x = getConfig().getDouble("auth.void-x", 0.5);
-        double y = getConfig().getDouble("auth.void-y", 64);
-        double z = getConfig().getDouble("auth.void-z", 0.5);
-        org.bukkit.Location loc = new org.bukkit.Location(w, x, y, z);
-        loc.setYaw(0f);
-        loc.setPitch(0f);
-        return loc;
-    }
-
-    private org.bukkit.Location spawnLocation() {
-        String worldName = getConfig().getString("auth.spawn-world", "world");
-        org.bukkit.World w = Bukkit.getWorld(worldName);
-        if (w == null) {
-            w = Bukkit.getWorlds().isEmpty() ? null : Bukkit.getWorlds().get(0);
-        }
-        if (w == null) {
-            return null;
-        }
-        double x = getConfig().getDouble("auth.spawn-x", 0.5);
-        double y = getConfig().getDouble("auth.spawn-y", -1); /* -1 = use world spawn */
-        double z = getConfig().getDouble("auth.spawn-z", 0.5);
-        org.bukkit.Location loc;
-        if (y < 0) {
-            loc = w.getSpawnLocation();
-            loc.setYaw(0f);
-            loc.setPitch(0f);
-        } else {
-            loc = new org.bukkit.Location(w, x, y, z);
-            loc.setYaw(0f);
-            loc.setPitch(0f);
-        }
-        return loc;
     }
 
     public String message(String key) {

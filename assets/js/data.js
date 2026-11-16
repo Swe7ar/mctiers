@@ -1,5 +1,5 @@
-/* Static reference data. Player accounts live in localStorage and are managed
-   by the admin -- players register themselves and the admin sets their tiers. */
+/* Static reference data. The real player list lives in assets/js/roster.js —
+   edit that file to add people; the admin sets their tiers. */
 window.MCT = {
   "site": "MCTiers",
   "points": { "HT1": 60, "LT1": 45, "HT2": 30, "LT2": 20, "HT3": 10, "LT3": 6, "HT4": 4, "LT4": 3, "HT5": 2, "LT5": 1 },

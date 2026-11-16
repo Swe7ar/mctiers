@@ -35,6 +35,11 @@ public final class SkinCommand implements CommandExecutor, TabCompleter {
         this.plugin = plugin;
     }
 
+    private String message(String key) {
+        String raw = plugin.getConfig().getString(key, "");
+        return org.bukkit.ChatColor.translateAlternateColorCodes('&', raw);
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
@@ -50,11 +55,11 @@ public final class SkinCommand implements CommandExecutor, TabCompleter {
             player.sendMessage("That is not a valid name.");
             return true;
         }
-        player.sendMessage(plugin.c("skin.looking-up").replace("%name%", name));
+        player.sendMessage(message("skin.looking-up").replace("%name%", name));
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             String messageKey = applySkin(player, name);
-            Bukkit.getScheduler().runTask(plugin, () -> player.sendMessage(plugin.c(messageKey).replace("%name%", name)));
+            Bukkit.getScheduler().runTask(plugin, () -> player.sendMessage(message(messageKey).replace("%name%", name)));
         });
         return true;
     }

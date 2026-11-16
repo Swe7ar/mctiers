@@ -5,8 +5,25 @@
 > instructions live in [`namemc/README.md`](namemc/README.md).
 
 A static Minecraft PvP tier list site (domain: crakedmctiers.gg, server IP: 130.78.218.210:25606) that
-runs with no backend. The roster starts empty: players create local accounts, and a single **admin**
-account sets every tier. Points, titles and the overall leaderboard are calculated in the browser.
+runs with no backend. Players are listed in **`assets/js/roster.js`** by the owner, so every visitor
+sees the same people; a single **admin** account sets every tier. Points, titles and the overall
+leaderboard are calculated in the browser.
+
+## Adding players (the important file)
+
+Open **`assets/js/roster.js`**, copy the commented template, and set the player's real Minecraft name:
+
+```js
+window.MCTIERS_ROSTER = [
+  { name: "Notch", region: "EU", tiers: { vanilla: "HT1", sword: "LT2" } },
+];
+```
+
+- `name` is the Minecraft username — the skin and face load from it automatically.
+- `skin` can be a NameMC link or an image URL if you want a different skin.
+- `bio`, `banner`, `wallpaper`, `tiers` and `since` are optional.
+- Editing an entry re-syncs that player on every visitor's next page load.
+
 
 ## Host this repo for free on Render
 
@@ -47,27 +64,26 @@ since nothing on the site needs a server.
 > answers `404` for missing files instead of silently returning the home page, and sends
 > `Cache-Control: no-store` so edits appear on the next reload.
 
-## Accounts
+## Admin account
 
 | Account | Password | Can do |
 | --- | --- | --- |
 | `admin` | `admin1234` | Add/delete players, set every tier, set skins, export/import the roster |
-| any other name | whatever the player chose (optional) | View their profile and set their own Minecraft skin — tiers stay read-only |
 
-- Accounts live in `localStorage` (`mctiers.accounts.v1`); the session is `mctiers.session.v1`.
+- There is **no player registration** anymore — the owner lists players in `assets/js/roster.js`.
 - The admin account is seeded automatically on first load if it is missing.
-- `admin` is a reserved name, so a player cannot register it.
-- Passwords are a local obfuscation hash, **not** real authentication. This is a fan-made static
-  copy, not a secure login system.
-- Staff (`admin`) profiles are never ranked.
+- `admin` is a reserved name and is never ranked.
 
 ## Editing tiers (admin)
 
 1. Open **Log in** → `admin` / `admin1234`.
-2. Add a player from the admin panel, or delete an existing one.
+2. Players come from `assets/js/roster.js`; you can also add one from the admin panel (that copy is
+   saved only in your browser).
 3. Press **Edit tiers** on a player and pick `HT1`–`LT5` per gamemode. Changes save instantly and the
    leaderboard updates.
 4. **Export roster** downloads every local account as JSON; **Import roster** restores a backup.
+
+To make a player appear for **everyone**, add them to `roster.js` and push to GitHub.
 
 Points per tier: HT1 60, LT1 45, HT2 30, LT2 20, HT3 10, LT3 6, HT4 4, LT4 3, HT5 2, LT5 1.
 
@@ -152,12 +168,12 @@ Effects layer (`assets/js/fx.js`):
 
 ## The roster
 
-The site starts with **no players**. Players register themselves with a name, region and optional
-Minecraft skin; only the admin can set tiers (player profiles are read-only for everyone else).
+The site's player list is **`assets/js/roster.js`** — the same people for every visitor.
 
-- Player accounts are stored in `localStorage` — each browser has its own roster.
+- Each entry is copied into `localStorage` on page load, so the admin panel can edit tiers and looks.
+- Editing an entry re-applies it to everyone on their next visit; untouched local edits are kept.
 - The admin sets tiers from **Admin panel → Edit tiers** (`account.html?edit=Name`).
-- The admin can sync the local roster into the game hub with **Sync roster to the game hub**.
+- The admin can sync the roster into the game hub with **Sync roster to the game hub**.
 
 ## Admin: editing a player
 
@@ -283,9 +299,10 @@ Rankings page layout:
 | `index.html` | Home: top players, gamemodes, tier testing, points, titles, events, FAQ |
 | `rankings.html` | `?gm=overall` or `?gm=vanilla\|uhc\|pot\|nethop\|smp\|sword\|axe\|mace` — tier columns |
 | `player.html` | `?name=<player>` — profile, skin, tier table, players in the same tier |
-| `account.html` | Login, player dashboard, admin panel; `?edit=<player>` opens the tier editor |
+| `account.html` | Admin login and admin panel; `?edit=<player>` opens the tier editor |
 | `server-ip.html`, `events.html`, `guides.html` | Supporting pages |
-| `assets/js/data.js` | Static reference data: 8 gamemodes, points, titles, regions (empty roster) |
+| `assets/js/roster.js` | **The player list — edit this to add people** |
+| `assets/js/data.js` | Static reference data: 8 gamemodes, points, titles, regions |
 | `assets/js/app.js` | Rendering, search, tier maths, accounts, skins, profile popup, motion helpers |
 | `assets/js/fx.js` | Effects layer: particles, cursor light, scroll progress, page veil, ticker |
 | `assets/css/style.css` | Theme, components, rankings layout, animations |
@@ -299,8 +316,8 @@ Rankings page layout:
 ## Data notes
 
 `assets/js/data.js` holds only reference data — gamemodes, the HT1–LT5 point table, title thresholds
-and region codes. The roster is empty on purpose and is rebuilt from `localStorage`, so clearing site
-data also clears every player account.
+and region codes. `assets/js/roster.js` is the shared player list; it is copied into `localStorage`
+(`mctiers.accounts.v1`) on every page load so the admin panel can edit tiers and looks.
 
 ## Credits
 
