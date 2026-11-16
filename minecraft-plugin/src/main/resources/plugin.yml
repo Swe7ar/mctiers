@@ -2,7 +2,7 @@ name: MCTiersTierTest
 version: '1.2.2'
 main: gg.craked.mctiers.TierTestPlugin
 api-version: '1.21'
-description: Tier test codes, offline login and skins for MCTiers.
+description: Tier test codes and player skins for MCTiers.
 author: crakedmctiers.gg
 website: https://crakedmctiers.gg
 folia-supported: false
